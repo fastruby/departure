@@ -76,5 +76,10 @@ end
 
 if ActiveRecord::VERSION::MAJOR < 6
   ActiveRecord::Migrator.send :prepend, Rails5Compatibility::Migrator
-  ActiveRecord::MigrationContext.send :prepend, Rails5Compatibility::MigrationContext
+  if ActiveRecord::VERSION::MINOR < 5.2
+    ActiveRecord::Migrator.send :prepend, Rails5Compatibility::MigrationContext
+    ActiveRecord::MigrationContext = ActiveRecord::Migrator
+  else
+    ActiveRecord::MigrationContext.send :prepend, Rails5Compatibility::MigrationContext
+  end
 end
